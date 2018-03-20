@@ -1,0 +1,34 @@
+* {
+	margin:0;
+	padding:0;
+}
+
+body,html {
+}
+
+#content {
+	width: 850px; height: 850px;
+	color: "f1f1f1";
+	position: relative;
+	z-index: 1;
+}
+#map {
+	width: 850px; height: 850px;
+	z-index: 2;
+	position: absolute;
+}
+
+.chest {
+	width: 22px; height: 22px;
+	position: absolute;
+	z-index: 10;
+	display: none;
+}
+
+.route_line {
+	z-index: 15;
+}
+
+#first_circle, #staring_loc, #shortest_loc {
+	display: none;
+}
