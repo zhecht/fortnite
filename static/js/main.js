@@ -183,6 +183,22 @@ $("#content").click(function(e){
 	}
 });
 
+$(document).ready(function() {
+	$.ajax({
+		url: "/find_location_and_path",
+		success: function(data) {
+			//console.log(data);
+			var prev_coord = [data[0]["starting_x"],data[0]["starting_y"]];
+			for (var i = 1; i < data.length; ++i) {
+				var chest_data = data[i];
+				var chest_coord = [chest_data["x"],chest_data["y"]];
+				drawLine(prev_coord[0],prev_coord[1],chest_coord[0],chest_coord[1]);
+				prev_coord = chest_coord;
+			}
+		}
+	});
+});
+
 
 function getPathData(starting_x,starting_y,circle_x,circle_y) {
 	$.ajax({

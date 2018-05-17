@@ -1,7 +1,7 @@
 from flask import *
 import operator
 
-find_path = Blueprint('find_path', __name__, template_folder='views')
+find_path_blueprint = Blueprint('find_path', __name__, template_folder='views')
 
 px_per_box = 81
 time_left = 380
@@ -102,10 +102,27 @@ def findPath(chest_ids,neighbors,path,optimal_path,circle_x,circle_y,time,idx):
 			path = new_path[:-1]
 	return path,optimal_path
 
+def findTimedPath(chest_ids,neighbors,path,optimal_path,time,idx):
+	for n in neighbors[:10]:
+		if n["id"] not in path:
+			path.append(n["id"])
+			time_to_chest = n["dist"] / px_per_sec
 
+			if time - time_to_chest <= 0:
+				return path,optimal_path
 
-@find_path.route('/find_path',methods=["GET"])
-def find_path_route():
+			idx += 1
+			time -= time_to_chest
+
+			new_path,optimal_path = findTimedPath(chest_ids,getNeighbors(n["id"],neighbors),path,optimal_path,time,idx)
+
+			if len(new_path) > len(optimal_path):
+				optimal_path = new_path[:]
+			path = new_path[:-1]
+	return path,optimal_path
+
+@find_path_blueprint.route('/find_path',methods=["GET"])
+def find_path_blueprint_route():
 	all_chests = getAllChests()
 	time_left = int(request.args["time_left"])
 	
