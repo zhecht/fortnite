@@ -6,6 +6,69 @@ var first_storm_time = 320; //3 min
 var px_per_sec = px_per_box / 45;
 var starting_loc_chosen = false;
 var starting_x, starting_y;
+var scale = 2880 / 850;
+var towns = {};
+var tot_chests = 0;
+
+var town_x = 0, town_y = 0;
+
+
+
+function verifyChestInTown(town_x,town_y,chest_left,chest_top) {
+
+	if ((chest_left < (town_x * 81)) || (chest_left > ((town_x + 2) * 81))) {
+		return false;
+	}
+	if ((chest_top < (town_y * 81)) || (chest_top > ((town_y + 2) * 81))) {
+		return false;
+	}
+	return true;
+}
+
+function scaleChest(chest_coord,town_coord) {
+	return (chest_coord * scale) - (274 * town_coord) - 70;
+}
+
+function changeTown(town_name) {
+	town_x = towns[town_name][0];
+	town_y = towns[town_name][1];
+	var chests_in_town = [];
+
+	$(".chest").css("display", "none");
+	$(".time_circles").remove();
+
+	for (var i = 0; i < tot_chests; ++i) {
+		var chest = $("#chest_"+i);
+		var chest_coords = $("#chest_"+i+"_coords").val().split("_");
+		var left = parseInt(chest_coords[0]);
+		var top = parseInt(chest_coords[1]);
+
+		if (verifyChestInTown(town_x,town_y,left,top)) {
+			chest.css("display", "block");
+			chest.css("left", scaleChest(left,town_x) + 22);
+			chest.css("top", scaleChest(top,town_y) + 22);
+			chests_in_town.push(i);
+		}
+	}
+
+	$("#map").attr("src", "/static/images/towns/"+town_name.split(" ").join("_")+".png");
+	return chests_in_town;
+}
+
+function onSelectChange(){
+	var chests_in_town = changeTown($("#town_select option:selected").text());
+	var url = "/find_starting_path?chests_in_town=";
+
+	url += chests_in_town.join("_");
+	$.ajax({
+		url: url,
+		success: function(data) {
+			var coords = $("#chest_"+data+"_coords").val().split("_");
+			drawCircle(scaleChest(parseInt(coords[0]), town_x) + 33, scaleChest(parseInt(coords[1]), town_y) + 33);
+		}
+	});
+}
+
 
 function formatSpeed(seconds) {
 	var min = parseInt(seconds / 60);
@@ -53,8 +116,10 @@ var drawCircle = function(x,y) {
 		.attr('class', 'time_circles')
 		.attr('cx', x)
 		.attr('cy', y)
-		.attr('r', 3)
-		.attr('fill', "white")
+		.attr('r', 20)
+		.attr('stroke', 'red')
+		.attr('stroke-width', 5)
+		.attr('fill', "none")
 		.appendTo($svg);
 };
 
@@ -183,7 +248,7 @@ $("#content").click(function(e){
 	}
 });
 
-$(document).ready(function() {
+/*$(document).ready(function() {
 	$.ajax({
 		url: "/find_location_and_path",
 		success: function(data) {
@@ -198,7 +263,7 @@ $(document).ready(function() {
 		}
 	});
 });
-
+*/
 
 function getPathData(starting_x,starting_y,circle_x,circle_y) {
 	$.ajax({

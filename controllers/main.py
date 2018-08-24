@@ -3,6 +3,16 @@ main = Blueprint('main', __name__, template_folder='views')
 
 @main.route('/',methods=["GET"])
 def main_route():
+	with open("static/towns.txt") as f:
+		content = f.readlines()
+	town_arr = [x.strip() for x in content]
+	all_towns = []
+
+	for town in town_arr:
+		data = town.split('\t')
+		all_towns.append({"name": data[0], "x": int(data[1]), "y": int(data[2])})
+
+
 	with open("static/chest_locations.txt") as f:
 		content = f.readlines()
 	chest_arr = [x.strip() for x in content]
@@ -15,4 +25,4 @@ def main_route():
 		chest_num += 1
 
 	
-	return render_template("main.html", all_chests=all_chests)
+	return render_template("main.html", all_chests=all_chests,all_towns=all_towns, tot_chests=len(all_chests))

@@ -18,7 +18,7 @@ def get_distance(x, y):
 #soup = BS(html.read(), "lxml")
 
 
-soup = BS(open("static/fortnite_chests.html", "r"), "lxml")
+soup = BS(open("static/fortnite_chests.htm", "r"), "lxml")
 all_chests = soup.find_all("img", class_="leaflet-marker-icon")
 
 chest_arr = []

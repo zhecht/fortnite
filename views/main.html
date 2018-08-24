@@ -7,22 +7,44 @@
 		<script src="/static/js/jquery-3.3.1.min.js"></script>
 	</head>
 	<body style="font-size:14px;">
+		
 		<div id="content">
-			<img id="map" src="/static/images/map.png">
-			<svg width="850" height="850" style="position: absolute; z-index:20;">
 
+			<!-- <img id="map" src="/static/images/S4Map.png" > -->
+			<img id="map" src="/static/images/towns/Anarchy_Acres.png" >
+			
+			<svg width="548" height="548" style="position: absolute; z-index:20;" hidden>
+				<!-- 
 				<circle id="starting_loc" cx="0" cy="0" r="7" fill="red" ></circle>
 				<circle id="shortest_loc" cx="0" cy="0" r="7" fill="red" ></circle>
 				<circle id="first_circle" cx="300" cy="300" r="256" stroke="white" stroke-width="2" fill="transparent"></circle>
 				<line id="shortest_line" stroke="red" stroke-width="3"></line>
+
+				--> 
 			</svg>
+
 			{% for chest in all_chests %}
 				<img id="chest_{{chest.id}}" class="chest" src="/static/images/chest_icon.png" style="left: {{chest.x}}px; top: {{chest.y}}px" />
+				<input id="chest_{{chest.id}}_coords" type="hidden" value="{{chest.x}}_{{chest.y}}" />
 			{% endfor %}
 		</div>
 
+		<div id="town_select_div">
+			<select id="town_select" onchange="onSelectChange()">
+				{% for town in all_towns %}
+					<option>{{town.name}}</option>
+				{% endfor %}
+			</select>
+		</div>
 		<script src="/static/js/main.js"></script>
-		
+		<script>
+			tot_chests = {{tot_chests}};
+		</script>
+		{% for town in all_towns %}
+			<script>
+				towns["{{town.name}}"] = [{{town.x}}, {{town.y}}];
+			</script>
+		{% endfor %}
 	</body>
 
 </html>

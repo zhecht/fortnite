@@ -7,13 +7,27 @@ body,html {
 }
 
 #content {
-	width: 850px; height: 850px;
+	width: 548px; 
+	height: 548px;
 	color: "f1f1f1";
 	position: relative;
 	z-index: 1;
 }
+
+#town_select_div {
+	width: 548px;
+	text-align: center;
+}
+
+#town_select {
+	margin: 5%;
+	font-size: 20px;
+}
+
+
 #map {
-	width: 850px; height: 850px;
+	//width: 850px;
+	//height: 850px;
 	z-index: 2;
 	position: absolute;
 }

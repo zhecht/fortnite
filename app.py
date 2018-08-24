@@ -7,6 +7,7 @@ app = Flask(__name__, template_folder='views')
 app.register_blueprint(controllers.main)
 app.register_blueprint(controllers.path)
 app.register_blueprint(controllers.find_path_blueprint)
+app.register_blueprint(controllers.find_starting_path)
 app.register_blueprint(controllers.find_location_and_path)
 
 app.secret_key = os.urandom(24)
